@@ -13,21 +13,6 @@ const Component = () => {
   const refImgContainer = useRef(null);
   const [openDetail, setOpenDetail] = useState(true);
 
-  const dataURLToBlob = (dataUrl: string) => {
-    const parts = dataUrl.split(";base64,");
-    const contentType = parts[0].split(":")[1];
-    const raw = window.atob(parts[1]);
-    const rawLength = raw.length;
-
-    const uInt8Array = new Uint8Array(rawLength);
-
-    for (let i = 0; i < rawLength; ++i) {
-      uInt8Array[i] = raw.charCodeAt(i);
-    }
-
-    return new Blob([uInt8Array], { type: contentType });
-  };
-
   const copyImageToClipboard = async (blob: Blob) => {
     try {
       const clipboardItem = new ClipboardItem({ "image/png": blob });
@@ -51,6 +36,8 @@ const Component = () => {
         if (shouldDownload) {
           if (navigator.canShare && navigator.canShare({ files: [file] })) {
             try {
+              const idBet = "aasdasd";
+              const message = `¡Consulta los partidos por los que has apostado en apuestatotal y haz clic aquí para colocar las mismas apuestas con un solo clic!`;
               await navigator.share({
                 files: [
                   new File([file], "my-image-name.png", {
@@ -58,7 +45,8 @@ const Component = () => {
                   }),
                 ],
                 title: "Compartir Imagen",
-                text: "¡Mira esta imagen!",
+                text: message,
+                url: `https://web-at.kurax.dev/apuestas-deportivas/?betId=${idBet}#/overview`
               });
               console.log("Image shared successfully!");
             } catch (error) {
