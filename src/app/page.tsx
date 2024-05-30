@@ -6,7 +6,8 @@ import { BsTwitterX } from "react-icons/bs";
 import classNames from "classnames";
 import domtoimage from "dom-to-image";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
-import fondo from './bg.webp'
+import fondo from "./bg.webp";
+import { isFileSystemAccessAPISupported, saveFile } from "./save";
 
 const Component = () => {
   const [openSocial, setOpenSocial] = useState(false);
@@ -34,7 +35,16 @@ const Component = () => {
         });
 
         if (shouldDownload) {
-          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          if (isFileSystemAccessAPISupported()) {
+            await saveFile({
+              content : blob ,  
+              suggestedName: 'image.png', // Cambiar a 'image.jpg' si es JPEG
+              contentType: 'image/png', // Cambiar a 'image/jpeg' si es JPEG
+            });
+          } else if (
+            navigator.canShare &&
+            navigator.canShare({ files: [file] })
+          ) {
             try {
               const idBet = "aasdasd";
               const message = `¡Consulta los partidos por los que has apostado en apuestatotal y haz clic aquí para colocar las mismas apuestas con un solo clic!`;
@@ -46,7 +56,7 @@ const Component = () => {
                 ],
                 title: "Compartir Imagen",
                 text: message,
-                url: `https://web-at.kurax.dev/apuestas-deportivas/?betId=${idBet}#/overview`
+                url: `https://web-at.kurax.dev/apuestas-deportivas/?betId=${idBet}#/overview`,
               });
               console.log("Image shared successfully!");
             } catch (error) {
