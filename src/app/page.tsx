@@ -11,7 +11,7 @@ import { isFileSystemAccessAPISupported, saveFile } from "./save";
 
 const Component = () => {
   const [openSocial, setOpenSocial] = useState(false);
-  const refImgContainer = useRef<HTMLDivElement>(null);
+  const refImgContainer = useRef(null);
   const [openDetail, setOpenDetail] = useState(true);
 
   const copyImageToClipboard = async (blob: Blob) => {
@@ -27,9 +27,8 @@ const Component = () => {
   const onDownload = async (element: any, shouldDownload: boolean) => {
     if (element && element?.style) {
       element.style.overflow = "visible";
-      const createElement = element.cloneNode(true) as HTMLDivElement;
       try {
-        const blob = await domtoimage.toBlob(createElement);
+        const blob = await domtoimage.toBlob(element);
         const url = URL.createObjectURL(blob);
         const file = new File([blob], "my-image-name.png", {
           type: "image/png",
